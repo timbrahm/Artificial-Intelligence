@@ -49,7 +49,7 @@ def parseImgs(path):
 
 def main():
     path = r"./locations"
-    key = "&key=AIzaSyCp7rrY9WGUeQPuSBiB9ItmhYcMaODL7Ac"
+    key = "&key={}".format(os.environ['KEY'])
 
     location = "46.376180,9.228132"
     # check = GetStreet(location, key, path)
