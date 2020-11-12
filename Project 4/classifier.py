@@ -56,7 +56,8 @@ class Classifier:
                         try:
                             ham_dict[word] += 1
                         except KeyError:
-                            pass
+                            ham_dict[word] = 1
+                            spam_dict[word] = 0
                 elif line != "</SUBJECT>" and line != "<BODY>" and line != "":
                     line = line.split()
                     for word in line:
@@ -71,8 +72,6 @@ class Classifier:
         for feature in self.spam_dict:
             feat_given_spam[feature] = (self.spam_dict[feature] + 1) / (self.email_count_spam_train + 2)
         for feature in self.ham_dict:
-            if (self.ham_dict[feature] + 1) / (self.email_count_ham_train + 2) >= 1:
-                print("ERROR")
             feat_given_ham[feature] = (self.ham_dict[feature] + 1) / (self.email_count_ham_train + 2)
         return feat_given_spam, feat_given_ham
 
@@ -112,9 +111,6 @@ class Classifier:
                             feat_prob = self.feat_given_ham[feat]
                             if not feat_dict[feat]:
                                 feat_prob = 1 - feat_prob
-                            if feat_prob <= 0:
-                                print("WARNING: {}".format(feat_prob))
-                                print("FEAT: {}".format(feat))
                             total_ham_prob *= feat_prob
                             total_ham_prob_log += np.log(feat_prob)
 
@@ -132,9 +128,10 @@ class Classifier:
                         true_count = sum(feat_dict.values())
                         print("TEST {} {}/{} features true {:.3f} {:.3f} {} {}".format(email_count_spam_test, true_count, len(feat_dict), total_spam_prob_log, total_ham_prob_log, spam_class.lower(), correct))
 
-                    elif line != "</SUBJECT>" and line != "<BODY>" and len(line) > 0:
+                    elif line != "</SUBJECT>" and line != "<BODY>" and line != "":
                         line = line.split()
                         for word in line:
+                            word = word.lower()
                             if word in feat_dict:
                                 feat_dict[word] = True
                 file.close()
@@ -194,6 +191,7 @@ class Classifier:
                     elif line != "</SUBJECT>" and line != "<BODY>" and len(line) > 0:
                         line = line.split()
                         for word in line:
+                            word = word.lower()
                             if word in feat_dict:
                                 feat_dict[word] = True
                 file.close()

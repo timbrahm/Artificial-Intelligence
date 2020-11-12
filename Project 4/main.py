@@ -24,25 +24,6 @@ def main():
 
     spam_classifier = Classifier(file_list, DEBUG)
 
-    with open(ham_train_file, "r") as file:
-        for line in file:
-            line = line.rstrip()
-            line = line.split()
-            for word in line:
-                if word != "<BODY>" and word != "</SUBJECT>" and word != "</BODY>" and word != "<SUBJECT>":
-                    word = word.lower()
-                    if word not in spam_classifier.spam_dict:
-                            print(word)
-        file.close()
-
-
-
-
-    print(len(spam_classifier.feat_given_spam))
-    print(len(spam_classifier.feat_given_ham))
-    print(len(spam_classifier.spam_dict))
-    print(len(spam_classifier.ham_dict))
-
     if DEBUG:
         print("Training from {} and {}".format(spam_train_file, ham_train_file))
         print("Testing from {} and {}".format(spam_test_file, ham_test_file))
