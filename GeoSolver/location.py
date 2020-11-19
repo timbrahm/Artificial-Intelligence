@@ -75,7 +75,10 @@ class Location:
         self.plus_code = plus_code
 
     def setContinent(self):
-        self.continent = pc.country_alpha2_to_continent_code(self.country_code)
+        try:
+            self.continent = pc.country_alpha2_to_continent_code(self.country_code)
+        except KeyError:
+            self.continent = None
 
     def setJSON(self):
         self.toJSON()
